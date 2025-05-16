@@ -22,7 +22,6 @@ class Main():
     TYPE_GEMINI = "gemini"
 
     # .envから取得する変数
-    streamlit_secrets_path : str
     max_tokens : int
     max_input_str : str
     llm_type :str
@@ -32,7 +31,7 @@ class Main():
     temp_dir : str
     upload_max_size : int
     saved_path_file : str
-    streamlit_secrets_path : str
+    # streamlit_secrets_path : str
 
     # コンストラクタ： .envの環境変数値を設定 
     def __init__(self) -> None:
@@ -77,21 +76,21 @@ class Main():
             self.saved_path_file : str = ""
 
             # secrets.tomlの設定値を取得
-            if os.getenv("STREAMLIT_SECRETS_PATH") is None:
-                raise ValueError("環境変数：Streamlitのシークレットファイルのパス が未設定です")
-            self.streamlit_secrets_path = os.getenv("STREAMLIT_SECRETS_PATH")
-            # ファイル有無チェック
-            if not os.path.exists(self.streamlit_secrets_path):
-                st.error(f"シークレットファイルが見つかりません: {self.streamlit_secrets_path}")
-                raise FileExistsError
+            # if os.getenv("STREAMLIT_SECRETS_PATH") is None:
+            #     raise ValueError("環境変数：Streamlitのシークレットファイルのパス が未設定です")
+            # self.streamlit_secrets_path = os.getenv("STREAMLIT_SECRETS_PATH")
+            # # ファイル有無チェック
+            # if not os.path.exists(self.streamlit_secrets_path):
+            #     st.error(f"シークレットファイルが見つかりません: {self.streamlit_secrets_path}")
+            #     raise FileExistsError
         
         except ValueError as e:
             st.error("環境設定ファイル(.env)の値取得に失敗しました")
             st.exception(e)
         
-        except FileExistsError as e:
-            st.error("シークレットファイル(secrets.toml)の値取得に失敗しました")
-            st.exception(e)
+        # except FileExistsError as e:
+        #     st.error("シークレットファイル(secrets.toml)の値取得に失敗しました")
+        #     st.exception(e)
 
     # メイン処理
     def main_proc(self):
