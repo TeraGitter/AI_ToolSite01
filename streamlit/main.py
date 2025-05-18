@@ -84,12 +84,33 @@ class Main():
         st.set_page_config(layout="wide")  # ページ全体を幅広く表示
         # anchor=Falseは、タイトルにアンカーリンク(#)を付けないようにする設定
         st.title("ファイルAI要約ツール（デモ版）", anchor=False)
+
+        st.write("Streamlit version:", st.__version__)
+        
         # unsafe_allow_html=Trueを指定すると、HTMLタグをマークダウン内で使用できるようになる
         # セキュリティ上のリスクがあるため、信頼できるHTMLのみ使用する
         st.markdown("<h1 style='font-size: 16px; color: red;'>※個人情報・機密情報を含んだファイルはアップロードしないでください。</h1>", \
             unsafe_allow_html=True)
 
-        uploaded_file = st.file_uploader("アップロードするファイルを選択してください（アップロード可能なファイル形式：PDF / PNG / TXT）", type=["pdf", "png", "txt"])
+        try:
+            uploaded_file = st.file_uploader(
+                "アップロードするファイルを選択してください（アップロード可能なファイル形式：PDF / PNG / TXT）",
+                type=["pdf", "png", "txt"],
+                accept_multiple_files=False,
+                key="file_uploader"
+            )
+            
+            if uploaded_file is not None:
+                # ファイルサイズのチェック（例：10MB以下）
+                if uploaded_file.size > 10 * 1024 * 1024:  # 10MB
+                    st.error("ファイルサイズが大きすぎます。10MB以下のファイルをアップロードしてください。")
+                    return                
+            else:
+                st.warning("ファイルが選択されていません。")
+                
+        except Exception as e:
+            st.error(f"ファイルのアップロード中にエラーが発生しました: {str(e)}")
+
         input_sum_chars = st.number_input(f"要約文字数の制限：{str(self.summary_char_min)}～{str(self.summary_char_limit)}文字", \
                                     min_value=self.summary_char_min, max_value=self.summary_char_limit)
 
